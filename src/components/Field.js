@@ -1,6 +1,5 @@
 import {Input, Select, Form, Divider} from "antd";
-//import TextArea from "antd/lib/input/TextArea";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {PlusOutlined} from "@ant-design/icons";
 
 export function Field ({options, name, label, placeholder, onChange}) {
@@ -60,7 +59,7 @@ export function Field ({options, name, label, placeholder, onChange}) {
                       placeholder="Add new option"
                       autoComplete="off"
                     />
-                    <a
+                    <span
                       style={{
                         flex: "none",
                         padding: "8px",
@@ -70,7 +69,7 @@ export function Field ({options, name, label, placeholder, onChange}) {
                       onClick={handleClick}
                     >
                       <PlusOutlined /> Add New
-                    </a>
+                    </span>
                   </div>
                 </div>
               )}
