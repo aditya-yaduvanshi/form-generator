@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express"),
   mongoose = require("mongoose"),
   cors = require("cors"),
+  fileUpload = require("express-fileupload"),
   bodyParser = require("body-parser"),
   app = express(),
   path = require("path"),
@@ -25,6 +26,10 @@ app.use(
     callback(null, corsOptions);
   })
 );
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 },
+  createParentPath: true,
+}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use("/api/forms", forms);

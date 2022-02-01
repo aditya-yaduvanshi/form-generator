@@ -1,20 +1,5 @@
 const router = require("express").Router(),
-  {Responses} = require("../models"),
-  multer = require("multer"),
-  fs = require("fs/promises");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "static");
-  },
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      `${Date.now().toString()}_${file.originalname.replace(/( )/g,"_")}`
-    );
-  },
-});
-const upload = multer({storage});
+  {Responses} = require("../models");
 
 router
   .route("/")
@@ -31,15 +16,22 @@ router
       return res.json({error: err.message});
     }
   })
-  .post(upload.any(), async (req, res, next) => {
+  .post(async (req, res, next) => {
     let {body, files} = req;
     try {
       body = JSON.parse(body.response);
-      files.forEach(file => {
-        let i = body.answers.findIndex(ans => ans.question === file.fieldname);
-        if(i >= 0){
-          body.answers[i].answer = file.path.replace(/(\\{1,})/g, "/");
-        } 
+      body.answers.forEach(ans => {
+        let file = files[ans.question];
+        if(file){
+          let path = `static/${Date.now().toString()}_${file.name.replace(/( )/g,"_")}`;
+          file.mv(path, err => {
+            if(err){
+              throw new Error("file cannot be stored!");
+            }
+          });
+          file.path = path;
+          ans.answer = `/${path}`;
+        }
       });
       const response = new Responses({
         form: body.form,
@@ -51,9 +43,6 @@ router
       }
       return res.json({id: resRes._id});
     } catch (err) {
-      files.length ? files.forEach(async file => {
-        await fs.unlink(file.path);
-      }) : null;
       return res.json({error: err.message});
     }
   });
