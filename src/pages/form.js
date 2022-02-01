@@ -1,115 +1,84 @@
-import {Col, Row, Form, Table} from "antd";
+import {Form, Typography} from "antd";
+import {FormFooter, FormFillContent, FormFillHeader} from "../components";
+import {useNavigate, useParams} from "react-router-dom";
+import {useCallback, useEffect, useState} from "react";
+import {getForm, createResponse} from "../services";
 
-import {useState} from "react";
-import {Field} from "../components/Field";
 
-export function MyForm() {
-  const columns = [
-    {
-      key: "field",
-      dataIndex: "field",
-      title: "FIELD",
-    },
-    {
-      key: "input",
-      dataIndex: "input",
-      title: "INPUT",
-    },
-  ];
-  const rows = [
-    {
-      key: "PROJECT NAME",
-      field: "PROJECT NAME",
-    },
-    {
-      key: "CLIENT NAME",
-      field: "CLIENT NAME",
-    },
-    {
-      key: "PANEL NAME",
-      field: "PANEL NAME",
-    },
-    {
-      key: "PAGE NAME",
-      field: "PAGE NAME",
-    },
-    {
-      key: "SECTION NAME",
-      field: "SECTION NAME",
-    },
-    {
-      key: "EVENT NAME",
-      field: "EVENT NAME",
-    },
-  ];
-  const [table, setTable] = useState(rows);
+export function FillForm() {
+  const params = useParams();
+  const navigate = useNavigate();
+  const [form, setForm] = useState();
+  const [err, setErr] = useState(null);
+  const [files, setFiles] = useState([]);
 
-  function handleChange(field) {
-    setTable((prev) => {
-      let rowIndex = prev.findIndex((row) => row.field === field.name);
-      if (rowIndex !== -1) {
-        prev[rowIndex].input = field.value;
-        return prev;
+  const fetchForm = useCallback(async () => {
+    return await getForm(params.id);
+  }, [params.id]);
+
+  useEffect(() => {
+    fetchForm()
+      .then((res) => setForm(res))
+      .catch((err) => setErr(err));
+    return;
+  }, [fetchForm]);
+
+  function saveFile (e, title) {
+    setFiles(state => {
+      let i = state.findIndex(q => q.title === title);
+      if(i >= 0){
+        state[i].files = e.target.files;
+      } else {
+        state.push({title, files: e.target.files});
       }
-      return [
-        ...prev,
-        {
-          key: field.name,
-          field: field.name,
-          input: field.value,
-        },
-      ];
+      return state;
     });
+  }
+
+  function submitForm(data) {
+    let response = {
+      form: params.id,
+      answers: [...Object.entries(data).map(q => ({question: q[0], answer: q[1]}))],
+    };
+
+    createResponse(response, files)
+      .then(res => {
+        sessionStorage.clear();
+        navigate(`/response/${res.id}`, {state: {form: params.id}});
+      })
+      .catch(err => setErr(err));
   }
 
   return (
     <>
-      <Row
-        gutter={{xs: 8, sm: 16, md: 24, lg: 32}}
+      <div
         style={{
-          paddingRight: "20px",
-          paddingLeft: "20px",
-          paddingTop: "20px",
-          paddingBottom: "20px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "50px",
+          height: "100%"
         }}
       >
-        <Col
-          span={12}
-          style={{
-            outline: "2px solid black",
-            paddingRight: "20px",
-            paddingLeft: "20px",
-            paddingTop: "20px",
-            paddingBottom: "20px",
-          }}
-        >
-          <Form autoComplete="off">
-            <input autoComplete="off" type="hidden"/>
-            {table.map((row, ind) => (
-              <Field
-                name={row.field}
-                key={row.key}
-                options={[...table.map((tr) => tr.field)]}
-                label={`Select Field ${ind + 1}`}
-                placeholder={`Input Field Value ${ind + 1}`}
-                onChange={handleChange}
-              />
-            ))}
+        {form ? (
+          <Form
+            autoComplete="off"
+            onFinish={submitForm}
+            style={{width: "100%", maxWidth: "720px"}}
+            name="FillForm"
+          >
+            <FormFillHeader
+              title={form.title}
+              description={form.description}
+            />
+            <FormFillContent questions={form.questions} onSaveFile={saveFile} />
+            <FormFooter />
           </Form>
-        </Col>
-        <Col
-          span={12}
-          style={{
-            outline: "2px solid black",
-            paddingRight: "20px",
-            paddingLeft: "20px",
-            paddingTop: "20px",
-            paddingBottom: "20px",
-          }}
-        >
-          <Table columns={columns} dataSource={table}></Table>
-        </Col>
-      </Row>
+        ) : null}
+        {err ? (
+          <Typography.Title>{err.message.toUpperCase()}</Typography.Title>
+        ) : null}
+      </div>
     </>
   );
 }

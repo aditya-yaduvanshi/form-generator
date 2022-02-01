@@ -1,27 +1,69 @@
-import { Layout } from "antd";
-import { Content, Header } from "antd/lib/layout/layout";
-import {Link, Route, Routes} from "react-router-dom";
-import {ShowForm, CreateForm, FillForm, MyForm} from "./pages";
+import React from "react";
+import {Layout, Typography, Row, Col} from "antd";
+import {Content} from "antd/lib/layout/layout";
+import {Link, Route, Routes, BrowserRouter as Router} from "react-router-dom";
+import {Response, CreateForm, FillForm, NotFound} from "./pages";
+import "./App.css";
 
 function App() {
   return (
-    <>
-      <Layout>
-        <Header>
-          <Link to="/">Create</Link>
-          <Link to="show/:id">Show</Link>
-          <Link to="fill/:id">Fill</Link>
-        </Header>
-        <Content>
-          <Routes>
-            <Route index path="/" element={<MyForm/>} />
-            <Route path="create" element={<CreateForm/>} />
-            <Route path="show/:id" element={<ShowForm/>} />
-            <Route path="fill/:id" element={<FillForm/>} />
-          </Routes>
-        </Content>
-      </Layout>
-    </>
+    <React.StrictMode>
+      <Router>
+        <Layout
+          style={{
+            minHeight: "100vh",
+            paddingBottom: "100px",
+            backgroundColor: "#FFF5",
+          }}
+        >
+          <Row>
+            <Col
+              span={24}
+              style={{
+                textAlign: "center",
+                padding: "10px",
+                backgroundColor: "gray",
+              }}
+            >
+              <Link to="/">
+                <Typography.Title
+                  level={3}
+                  style={{
+                    color: "white",
+                    marginBottom: "5px",
+                    display: "inline-block",
+                  }}
+                >
+                  Formsheet
+                </Typography.Title>
+              </Link>
+            </Col>
+          </Row>
+          <Content style={{position: "relative"}}>
+            <Routes>
+              <Route index path="/" element={<CreateForm />} />
+              <Route path="/response/:id" element={<Response />} />
+              <Route path="/form/:id" element={<FillForm />} />
+              <Route
+                path="*"
+                element={
+                  <Typography.Title
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%)",
+                    }}
+                  >
+                    404 NOT FOUND
+                  </Typography.Title>
+                }
+              />
+            </Routes>
+          </Content>
+        </Layout>
+      </Router>
+    </React.StrictMode>
   );
 }
 
