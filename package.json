@@ -10,9 +10,6 @@
     "form generator",
     "forms"
   ],
-  "engines" : { 
-    "node" : ">=16.13.1" 
-  },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.16.1",
