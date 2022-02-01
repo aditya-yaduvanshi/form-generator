@@ -54,7 +54,6 @@ router
       files.length ? files.forEach(async file => {
         await fs.unlink(file.path);
       }) : null;
-      console.log(err.message);
       return res.json({error: err.message});
     }
   });
@@ -70,7 +69,6 @@ router
       }
       return res.json({response: resRes});
     } catch (err) {
-      console.log(err)
       return res.json({error: err.message});
     }
   });
