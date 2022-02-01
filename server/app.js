@@ -8,9 +8,21 @@ const express = require("express"),
   {PORT, HOST, MONGO_URI} = process.env,
   {forms, responses} = require("./routes");
 
-app.use(cors({
-  origin: "https://formsheet.netlify.app"
-}));
+app.use(
+  cors((req, callback) => {
+    let corsOptions,
+      allowlist = [
+        "https://formsheet.netlify.app",
+        "https://formsheat.herokuapp.com",
+      ];
+    if (allowlist.indexOf(req.header("Origin")) !== -1) {
+      corsOptions = {origin: true};
+    } else {
+      corsOptions = {origin: false};
+    }
+    callback(null, corsOptions);
+  })
+);
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use("/api/forms", forms);

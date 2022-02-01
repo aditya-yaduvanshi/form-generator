@@ -1,4 +1,4 @@
-
+const base = process.env.REACT_APP_BASE_URL
 
 export async function createResponse(response, files) {
   try {
@@ -7,7 +7,7 @@ export async function createResponse(response, files) {
     files.forEach(q => {
       formData.append(q.title, q.files[0]);
     });
-    const res = await fetch(`/api/responses`, {
+    const res = await fetch(`${base}/api/responses`, {
         method: "POST",
         body: formData,
       }),
@@ -20,7 +20,7 @@ export async function createResponse(response, files) {
 
 export async function getResponse(id) {
   try {
-    const res = await fetch(`/api/responses/${id}`, {
+    const res = await fetch(`${base}/api/responses/${id}`, {
       }),
       result = await res.json();
     return result.response;

@@ -1,12 +1,12 @@
 {
-  "name": "formsheet",
+  "name": "formsheat",
   "version": "1.0.0",
   "private": true,
-  "description": "",
+  "description": "A dynamic form generator for quiz, survey and more.",
   "main": "server/app.js",
   "author": "Aditya Yaduvanshi",
   "license": "ISC",
-  "keywords": [],
+  "keywords": ["form generator", "forms"],
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.16.1",
