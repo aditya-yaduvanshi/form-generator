@@ -5,12 +5,11 @@ const express = require("express"),
   bodyParser = require("body-parser"),
   app = express(),
   path = require("path"),
-  PORT = Number(process.env.PORT) || 5000,
+  PORT = process.env.PORT || 5000,
   HOST = process.env.HOST || "127.0.0.1",
   MONGO_URI = process.env.MONGO_URI,
   {forms, responses} = require("./routes");
 
-app.set()
 app.use(
   cors((req, callback) => {
     let corsOptions,
