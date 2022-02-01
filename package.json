@@ -31,7 +31,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "nodemon --ignore src/ --watch server server/app.js",
-    "start": "NODE_ENV=production BABEL_ENV=production node server/app.js"
+    "start": "npm install && npm run build && node server/app.js"
   },
   "eslintConfig": {
     "extends": [

@@ -2,7 +2,7 @@ import React from "react";
 import {Layout, Typography, Row, Col} from "antd";
 import {Content} from "antd/lib/layout/layout";
 import {Link, Route, Routes, BrowserRouter as Router} from "react-router-dom";
-import {Response, CreateForm, FillForm, NotFound} from "./pages";
+import {Response, CreateForm, FillForm} from "./pages";
 import "./App.css";
 
 function App() {
