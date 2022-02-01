@@ -8,7 +8,9 @@ const express = require("express"),
   {PORT, HOST, MONGO_URI} = process.env,
   {forms, responses} = require("./routes");
 
-app.use(cors());
+app.use(cors({
+  origin: "https://formsheet.netlify.app"
+}));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use("/api/forms", forms);
