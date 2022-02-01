@@ -5,9 +5,12 @@ const express = require("express"),
   bodyParser = require("body-parser"),
   app = express(),
   path = require("path"),
-  {PORT, HOST, MONGO_URI} = process.env,
+  PORT = Number(process.env.PORT) || 5000,
+  HOST = process.env.HOST || "127.0.0.1",
+  MONGO_URI = process.env.MONGO_URI,
   {forms, responses} = require("./routes");
 
+app.set()
 app.use(
   cors((req, callback) => {
     let corsOptions,
@@ -40,8 +43,8 @@ mongoose
   })
   .then((_conn) => {
     console.log("db connected");
-    app.listen(PORT || 5000, HOST || "localhost", () =>
-      console.log("listening on port", PORT || 5000)
+    app.listen(PORT, HOST, () =>
+      console.log("listening on port", PORT)
     );
   })
   .catch((err) => {
